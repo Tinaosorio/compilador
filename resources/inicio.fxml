@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.compiladores.controlador.inicioController">
+   <children>
+      <TabPane layoutX="7.0" prefHeight="323.0" prefWidth="590.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab fx:id="codigoFuente" text="Codigo Fuente">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="250.0" prefWidth="590.0">
+                     <children>
+                        <TextArea fx:id="TxtCodigo" layoutX="2.0" prefHeight="290.0" prefWidth="583.0" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="tabLexico" text="Tabla lexica">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="tablaLexica" layoutX="6.0" layoutY="5.0" prefHeight="277.0" prefWidth="578.0">
+                          <columns>
+                            <TableColumn fx:id="lexema" prefWidth="155.0" text="Lexema" />
+                            <TableColumn fx:id="token" prefWidth="161.0" text="Token" />
+                              <TableColumn fx:id="fila" prefWidth="130.0" text="Fila" />
+                              <TableColumn fx:id="columna" prefWidth="128.0" text="Columna" />
+                          </columns>
+                        </TableView>
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+            <Tab fx:id="tabErrores" text="Errores Lexicos">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="tablaError" layoutX="8.0" layoutY="6.0" prefHeight="286.0" prefWidth="572.0">
+                          <columns>
+                            <TableColumn fx:id="LexemaError" prefWidth="171.0" text="Lexema" />
+                            <TableColumn fx:id="ErrorError" prefWidth="179.0" text="Error" />
+                              <TableColumn fx:id="FilaError" prefWidth="122.0" text="Fila" />
+                              <TableColumn fx:id="ColumnaError" prefWidth="99.0" text="Columna" />
+                          </columns>
+                        </TableView>
+                     </children></AnchorPane>
+                </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <Button fx:id="btnAnalizar" blendMode="MULTIPLY" contentDisplay="CENTER" layoutX="111.0" layoutY="341.0" mnemonicParsing="false" onAction="#AnalizarCodigo" text="Analizar" textAlignment="CENTER" textFill="#40859a" textOverrun="CENTER_ELLIPSIS">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnBorrar" blendMode="MULTIPLY" layoutX="380.0" layoutY="341.0" mnemonicParsing="false" onAction="#BorrarEditor" text="Borrar" textFill="#2e85a4" textOverrun="CENTER_ELLIPSIS">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
