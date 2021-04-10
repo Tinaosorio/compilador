@@ -8,6 +8,7 @@ class AnalizadorLexico (var codigoFuente:String) {
     var finCodigo = 0.toChar()
     var filaActual= 0
     var columnaActual= 0
+    val MAX_LONG = 10
 
     fun almacenarToken(lexema:String, categoria: Categoria, fila:Int, columna:Int ) {
         listaTokens.add(Token(lexema, categoria, fila, columna))
@@ -32,7 +33,6 @@ class AnalizadorLexico (var codigoFuente:String) {
             if (esPalabraReservadaWhile()) continue
             if (esClase()) continue
             if (esCadena()) continue
-            if (esMetodo()) continue
             if (esTrue()) continue
             if (esEntero()) continue
             if (esPalabraReservadaInt()) continue
@@ -481,10 +481,10 @@ class AnalizadorLexico (var codigoFuente:String) {
     }
 
      fun esAgrupador(): Boolean {
-        if (!(caracterActual == '(' || caracterActual == ')')) {
+        if (!(caracterActual == '(' || caracterActual == ')' || caracterActual == '[' || caracterActual == ']')) {
             return false
         } else {
-            if (caracterActual == '(') {
+            if (caracterActual == '(' || caracterActual == '[') {
                 val filaInicial = filaActual
                 val columnaInicial = columnaActual
                 val lexema = caracterActual.toString() + ""
@@ -492,7 +492,7 @@ class AnalizadorLexico (var codigoFuente:String) {
                 obtenerSiguienteCaracter()
                 return true
             }
-            if (caracterActual == ')') {
+            if (caracterActual == ')' || caracterActual == ']') {
                 val filaInicial = filaActual
                 val columnaInicial = columnaActual
                 val lexema = caracterActual.toString() + ""
@@ -536,20 +536,23 @@ class AnalizadorLexico (var codigoFuente:String) {
         if (caracterActual.isDigit()) {
             return false
         }
-        if (caracterActual == '-') {
+        if (caracterActual == '%') {
             lexema += caracterActual
             obtenerSiguienteCaracter()
-            while (caracterActual != finCodigo && !caracterActual.isDigit() && caracterActual.isLetter()) {
+            var i=0
+            while (caracterActual != finCodigo && !caracterActual.isDigit() && caracterActual.isLetter()
+                && i<MAX_LONG) {
                 lexema += caracterActual
                 obtenerSiguienteCaracter()
-                if (caracterActual == '-') {
+                if (caracterActual == '%') {
                     lexema += caracterActual
                     obtenerSiguienteCaracter()
                     almacenarToken(lexema,Categoria.METODO, filaInicial, columnaInicial)
                     return true
                 }
+                i++
             }
-            hacerBT(posicionInicial, filaInicial, columnaInicial)
+            almacenarError(lexema, "No se completo el metodo", filaInicial, columnaInicial)
             return false
         }
         return false
@@ -1190,7 +1193,9 @@ class AnalizadorLexico (var codigoFuente:String) {
                 println(lexema)
                 return true
             }
-            while (caracterActual != finCodigo && !caracterActual.isDigit() && caracterActual.isLetter()) {
+            var i = 0
+            while (caracterActual != finCodigo && !caracterActual.isDigit() && caracterActual.isLetter() &&
+                    i < MAX_LONG) {
                 lexema += caracterActual
                 obtenerSiguienteCaracter()
                 if (caracterActual == ']') {
@@ -1199,9 +1204,9 @@ class AnalizadorLexico (var codigoFuente:String) {
                     almacenarToken(lexema,Categoria.CLASE, filaInicial, columnaInicial)
                     return true
                 }
+                i++
             }
             almacenarError(lexema, "No se completo la clase", filaInicial, columnaInicial)
-            println(lexema)
             return true
         }
         return false
