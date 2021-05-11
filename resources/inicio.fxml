@@ -5,7 +5,7 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="400.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.compiladores.controlador.inicioController">
-   <children>
+      <children>
       <TabPane layoutX="7.0" prefHeight="323.0" prefWidth="590.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab fx:id="codigoFuente" text="Codigo Fuente">
@@ -58,5 +58,6 @@
             <Font size="20.0" />
          </font>
       </Button>
+       <TreeView fx:id="arbolVisual" layoutX="645.0" layoutY="53.0" prefHeight="622.0" prefWidth="340.0"/>
    </children>
 </AnchorPane>

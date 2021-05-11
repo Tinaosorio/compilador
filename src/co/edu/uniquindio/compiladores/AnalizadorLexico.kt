@@ -46,12 +46,17 @@ class AnalizadorLexico (var codigoFuente:String) {
             if (esPalabraReservadaReturn()) continue
             if (esPalabraReservadaClass()) continue
             if (esFalse()) continue
+            if (esDosPuntos()) continue
+            if (esComa()) continue
+            if (esParentesisDr()) continue
+            if (esParentesisIq()) continue
+            if (esCorcheteDr()) continue
+            if (esCorcheteIq()) continue
             if (esPalabraReservadaVoid()) continue
             if (esOpRelacional()) continue
             if (esOpAsignacion()) continue
             if (esOpRelacional2()) continue
             if (esOpAritmetico()) continue
-            if (esAgrupador()) continue
             if (esAgrupadorLlave()) continue
             if (esOpConcatenacion()) continue
             if (esPalabraReservadaString()) continue
@@ -64,6 +69,7 @@ class AnalizadorLexico (var codigoFuente:String) {
             if (esVariable()) continue
             if (esComentario()) continue
             if (esComentarioBloque()) continue
+            if (esFinSentencia()) continue
 
 
             almacenarToken(lexema= ""+caracterActual, Categoria.DESCONOCIDO, filaActual, columnaActual)
@@ -480,30 +486,99 @@ class AnalizadorLexico (var codigoFuente:String) {
         }
     }
 
-     fun esAgrupador(): Boolean {
-        if (!(caracterActual == '(' || caracterActual == ')' || caracterActual == '[' || caracterActual == ']')) {
+    fun esDosPuntos(): Boolean {
+        val filaInicial = filaActual
+        val columnaInicial = columnaActual
+        val lexema = caracterActual.toString() + ""
+
+        if (caracterActual != ':' ) {
             return false
         } else {
-            if (caracterActual == '(' || caracterActual == '[') {
-                val filaInicial = filaActual
-                val columnaInicial = columnaActual
-                val lexema = caracterActual.toString() + ""
-                almacenarToken(lexema, Categoria.AGRUPADOR, filaInicial, columnaInicial)
-                obtenerSiguienteCaracter()
-                return true
-            }
-            if (caracterActual == ')' || caracterActual == ']') {
-                val filaInicial = filaActual
-                val columnaInicial = columnaActual
-                val lexema = caracterActual.toString() + ""
-                almacenarToken(lexema, Categoria.AGRUPADOR, filaInicial, columnaInicial)
-                obtenerSiguienteCaracter()
-                return true
-            }
+            obtenerSiguienteCaracter()
+            almacenarToken(lexema, Categoria.DOS_PUNTOS, filaInicial, columnaInicial)
+            return true
         }
-        return false
     }
 
+    fun esFinSentencia(): Boolean {
+        val filaInicial = filaActual
+        val columnaInicial = columnaActual
+        val lexema = caracterActual.toString() + ""
+
+        if (caracterActual != '.' || caracterActual != ';' ) {
+            return false
+        } else {
+            obtenerSiguienteCaracter()
+            almacenarToken(lexema, Categoria.FIN_SENTENCIA, filaInicial, columnaInicial)
+            return true
+        }
+    }
+
+    fun esComa(): Boolean {
+        val filaInicial = filaActual
+        val columnaInicial = columnaActual
+        val lexema = caracterActual.toString() + ""
+
+        if (caracterActual != ',' ) {
+            return false
+        } else {
+            obtenerSiguienteCaracter()
+            almacenarToken(lexema, Categoria.COMA, filaInicial, columnaInicial)
+            return true
+        }
+    }
+    fun esParentesisIq(): Boolean {
+        val filaInicial = filaActual
+        val columnaInicial = columnaActual
+        val lexema = caracterActual.toString() + ""
+
+        if (caracterActual != '(' ) {
+            return false
+        } else {
+            obtenerSiguienteCaracter()
+            almacenarToken(lexema, Categoria.PARENTESISIQ, filaInicial, columnaInicial)
+            return true
+        }
+    }
+    fun esParentesisDr(): Boolean {
+        val filaInicial = filaActual
+        val columnaInicial = columnaActual
+        val lexema = caracterActual.toString() + ""
+
+        if (caracterActual != ')' ) {
+            return false
+        } else {
+            obtenerSiguienteCaracter()
+            almacenarToken(lexema, Categoria.PARENTESISDR, filaInicial, columnaInicial)
+            return true
+        }
+    }
+    fun esCorcheteIq(): Boolean {
+        val filaInicial = filaActual
+        val columnaInicial = columnaActual
+        val lexema = caracterActual.toString() + ""
+
+        if (caracterActual != '[' ) {
+            return false
+        } else {
+            obtenerSiguienteCaracter()
+            almacenarToken(lexema, Categoria.CORCHETEIQ, filaInicial, columnaInicial)
+            return true
+        }
+    }
+    fun esCorcheteDr(): Boolean {
+        val filaInicial = filaActual
+        val columnaInicial = columnaActual
+        val lexema = caracterActual.toString() + ""
+
+        if (caracterActual != '[' ) {
+            return false
+        } else {
+            obtenerSiguienteCaracter()
+            almacenarToken(lexema, Categoria.CORCHETEDR, filaInicial, columnaInicial)
+            return true
+        }
+    }
      fun esAgrupadorLlave(): Boolean {
         if (!(caracterActual == '{' || caracterActual == '}')) {
             return false

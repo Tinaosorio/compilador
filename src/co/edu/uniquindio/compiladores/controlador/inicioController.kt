@@ -3,13 +3,11 @@ package co.edu.uniquindio.compiladores.controlador
 import co.edu.uniquindio.compiladores.AnalizadorLexico
 import co.edu.uniquindio.compiladores.Error
 import co.edu.uniquindio.compiladores.Token
+import co.edu.uniquindio.compiladores.sintaxis.AnalizadorSintactico
 import javafx.concurrent.Task
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
-import javafx.scene.control.Alert
-import javafx.scene.control.TableColumn
-import javafx.scene.control.TableView
-import javafx.scene.control.TextArea
+import javafx.scene.control.*
 import javafx.scene.control.cell.PropertyValueFactory
 
 class inicioController {
@@ -29,6 +27,8 @@ class inicioController {
     var columna: TableColumn<Token, Int>? = null
 
     @FXML lateinit var TxtCodigo: TextArea
+
+    @FXML lateinit var arbolVisual: TreeView<String>
 
 
 //tabla para los errores
@@ -50,8 +50,8 @@ class inicioController {
 
 
     @FXML
-    fun AnalizarCodigo(e : ActionEvent){
-        if (TxtCodigo.text.isNotEmpty()){
+    fun AnalizarCodigo(e : ActionEvent) {
+        if (TxtCodigo.text.isNotEmpty()) {
 
             val lexico = AnalizadorLexico(TxtCodigo.text)
             lexico.analizar()
@@ -61,8 +61,19 @@ class inicioController {
             msgOK.headerText = "Codigo analizado"
             msgOK.showAndWait()
 
-        }
+            if (lexico.listaErrores.isEmpty()) {
 
+                val sintaxis = AnalizadorSintactico(lexico.listaTokens)
+                val uc = sintaxis.esUnidadDeCompilacion()
+                if (uc != null) {
+                    arbolVisual.root = uc.getArbolVisual ()
+                }
+            } else {
+                var alerta = Alert(Alert.AlertType.WARNING)
+                alerta.headerText = "mensaje"
+                alerta.contentText = "hay errorews lexicos en el codigo fuente"
+            }
+        }
     }
 
     @FXML
