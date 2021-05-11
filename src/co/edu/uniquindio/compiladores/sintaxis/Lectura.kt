@@ -1,8 +1,6 @@
 package co.edu.uniquindio.compiladores.sintaxis
 
-class Lectura (var expresionLogica:ExpresionLogica, var litaSentencia: ArrayList<Sentencia>) : Sentencia() {
+class Lectura (var nombreVariable: token, var expresion: Expresion) : Sentencia() {
 
-    override fun toString(): String {
-        return "Lectura(expresionLogica=$expresionLogica, litaSentencia=$litaSentencia)"
-    }
+
 }

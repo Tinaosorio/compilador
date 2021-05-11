@@ -485,7 +485,7 @@ class AnalizadorSintactico(var listaTokens:ArrayList<Token>) {
      */
     fun esAsignacion(): Asignacion? {
         val posInicial:Int = posicionActual
-        if (tokenActual.categoria == Categoria.VARIABLE ) {
+        if (tokenActual.categoria == Categoria.IDENTIFICADOR ) {
             val identificador = tokenActual
             obtenerSiguienteToken()
             if (tokenActual.categoria == Categoria.OP_ASIGNACION) {
