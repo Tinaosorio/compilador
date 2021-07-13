@@ -1,8 +1,16 @@
 package co.edu.uniquindio.compiladores.sintaxis
 
-class Retorno (var expresionLogica:ExpresionLogica, var litaSentencia: ArrayList<Sentencia>) : Sentencia() {
+import javafx.scene.control.TreeItem
+
+class Retorno (var expresion:Expresion) : Sentencia() {
 
     override fun toString(): String {
-        return "Retorno(expresionLogica=$expresionLogica, litaSentencia=$litaSentencia)"
+        return "Retorno(expresionLogica=$expresion)"
+    }
+
+    override fun getArbolVisual(): TreeItem<String> {
+        var raiz = TreeItem("Retorno:")
+        raiz.children.add(expresion.getArbolVisual())
+        return raiz
     }
 }

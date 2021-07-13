@@ -8,7 +8,14 @@ class Parametro (var nombre:Token, var tipoDato:Token) {
     override fun toString(): String {
         return "Parametro(nombre=$nombre, tipoDato=$tipoDato)"
     }
-    fun getArbolVisual(): TreeItem<String> {
-        return TreeItem("${nombre.lexema} : ${tipoDato.lexema}")
+
+    fun getArbolVisual(): TreeItem<String>{
+        var raiz = TreeItem("Parametro ")
+
+        raiz.children.add( TreeItem("Nombre: ${nombre.lexema}"))
+        raiz.children.add( TreeItem("TipoDato: ${tipoDato.lexema}"))
+
+        return raiz
     }
+
 }

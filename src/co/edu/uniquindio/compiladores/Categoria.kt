@@ -10,7 +10,7 @@ enum class Categoria {
     COMENTARIO_BLOQUE,
     DESCONOCIDO,
     METODO,
-    TRUE,
+    NEGACION,
     CARACTER,
     CADENA,
     CLASE,

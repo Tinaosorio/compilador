@@ -9,11 +9,7 @@ class Decision (var expresionLogica: ExpresionLogica, var listaSentencia:ArrayLi
     override fun getArbolVisual(): TreeItem<String>{
 
         var raiz = TreeItem("Decision")
-        var condicion = TreeItem("Condicion")
-
-        condicion.children.add( expresionLogica.getArbolVisual())
-
-        raiz.children.add(condicion)
+        raiz.children.add(expresionLogica.getArbolVisual())
 
         var raizTrue = TreeItem("Sentencias verdaderas")
         for( s in listaSentencia){
@@ -22,7 +18,7 @@ class Decision (var expresionLogica: ExpresionLogica, var listaSentencia:ArrayLi
         raiz.children.add(raizTrue)
 
         if (listaSentenciaElse!=null){
-            var raizFalse = TreeItem("Sentencias falsa")
+            var raizFalse = TreeItem("Sentencias Falsas")
             for( s in listaSentenciaElse !!){
                 raizFalse.children.add( s.getArbolVisual())
             }

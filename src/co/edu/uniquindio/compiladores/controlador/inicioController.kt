@@ -4,11 +4,13 @@ import co.edu.uniquindio.compiladores.AnalizadorLexico
 import co.edu.uniquindio.compiladores.Error
 import co.edu.uniquindio.compiladores.Token
 import co.edu.uniquindio.compiladores.sintaxis.AnalizadorSintactico
+import co.edu.uniquindio.compiladores.sintaxis.ErrorSintactico
 import javafx.concurrent.Task
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.*
 import javafx.scene.control.cell.PropertyValueFactory
+import kotlin.math.sin
 
 class inicioController {
     @FXML
@@ -31,7 +33,7 @@ class inicioController {
     @FXML lateinit var arbolVisual: TreeView<String>
 
 
-//tabla para los errores
+//tabla para los errores lexicos
     @FXML
     var tablaError: TableView<Error>? = null
 
@@ -46,6 +48,20 @@ class inicioController {
 
     @FXML
     var ColumnaError: TableColumn<Error, Int>? = null
+
+    //tabla errores sintacticos
+
+    @FXML
+    var tablaErroresSintacticos: TableView<ErrorSintactico>? = null
+
+    @FXML
+    var Mensaje: TableColumn<ErrorSintactico, String>? = null
+
+    @FXML
+    var FilaErrorSintactico: TableColumn<ErrorSintactico, Int>? = null
+
+    @FXML
+    var ColumnaErrorSintactico: TableColumn<ErrorSintactico, Int>? = null
 
 
 
@@ -66,8 +82,9 @@ class inicioController {
                 val sintaxis = AnalizadorSintactico(lexico.listaTokens)
                 val uc = sintaxis.esUnidadDeCompilacion()
                 if (uc != null) {
-                    arbolVisual.root = uc.getArbolVisual ()
+                    arbolVisual.root = uc.getArbolVisual()
                 }
+                refreshTablaErrorSintactico(sintaxis.listaErrores)
             } else {
                 var alerta = Alert(Alert.AlertType.WARNING)
                 alerta.headerText = "mensaje"
@@ -94,6 +111,12 @@ class inicioController {
         ErrorError?.cellValueFactory = PropertyValueFactory<Error, String>("errorMsg")
         FilaError?.cellValueFactory = PropertyValueFactory<Error, Int>("fila")
         ColumnaError?.cellValueFactory = PropertyValueFactory<Error, Int>("columna")
+
+        //tabla errores sintactivos
+
+        Mensaje?.cellValueFactory = PropertyValueFactory<ErrorSintactico, String>("errorMsg")
+        FilaErrorSintactico?.cellValueFactory = PropertyValueFactory<ErrorSintactico, Int>("fila")
+        ColumnaErrorSintactico?.cellValueFactory = PropertyValueFactory<ErrorSintactico, Int>("columna")
     }
 
     fun refresh(listaTokens: List<Token>) {
@@ -125,5 +148,19 @@ class inicioController {
         Thread(task).start()
     }
 
+    fun refreshTablaErrorSintactico(listaErrorSintactico: List<ErrorSintactico>) {
+        val task = object : Task<List<ErrorSintactico>> () {
+            override fun call(): List<ErrorSintactico> {
+                return listaErrorSintactico
+            }
+
+            override fun succeeded() {
+                tablaErroresSintacticos?.items?.clear()
+                tablaErroresSintacticos?.items?.addAll( value )
+            }
+        }
+
+        Thread(task).start()
+    }
 
 }

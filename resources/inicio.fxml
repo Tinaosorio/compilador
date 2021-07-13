@@ -46,6 +46,20 @@
                      </children></AnchorPane>
                 </content>
             </Tab>
+            <Tab fx:id="tabErroresSintacticos" text="Errores Sintacticos">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+                            <TableView fx:id="tablaErroresSintacticos" layoutX="8.0" layoutY="6.0" prefHeight="286.0" prefWidth="572.0">
+                                <columns>
+                                    <TableColumn fx:id="Mensaje" prefWidth="221.0" text="Error" />
+                                    <TableColumn fx:id="FilaErrorSintactico" prefWidth="142.0" text="Fila" />
+                                    <TableColumn fx:id="ColumnaErrorSintactico" prefWidth="208.0" text="Columna" />
+                                </columns>
+                            </TableView>
+                        </children></AnchorPane>
+                </content>
+            </Tab>
         </tabs>
       </TabPane>
       <Button fx:id="btnAnalizar" blendMode="MULTIPLY" contentDisplay="CENTER" layoutX="111.0" layoutY="341.0" mnemonicParsing="false" onAction="#AnalizarCodigo" text="Analizar" textAlignment="CENTER" textFill="#40859a" textOverrun="CENTER_ELLIPSIS">
@@ -58,6 +72,6 @@
             <Font size="20.0" />
          </font>
       </Button>
-       <TreeView fx:id="arbolVisual" layoutX="645.0" layoutY="53.0" prefHeight="622.0" prefWidth="340.0"/>
+       <TreeView fx:id="arbolVisual" layoutX="597.0" layoutY="6.0" prefHeight="622.0" prefWidth="255.0" />
    </children>
 </AnchorPane>

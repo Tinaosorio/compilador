@@ -1,10 +1,34 @@
 package co.edu.uniquindio.compiladores.sintaxis
 
+import co.edu.uniquindio.compiladores.Token
 import javafx.scene.control.TreeItem
 
-class ExpresionLogica : Expresion() {
+class ExpresionLogica() : Expresion() {
+    var expresionRelacional1:ExpresionRelacional? = null
+    var expresionRelacional2:ExpresionRelacional? = null
+    var operador: Token? = null
 
-    override open fun getArbolVisual(): TreeItem<String> {
-        return TreeItem("Expresion Logica")
+
+    constructor(expresionRelacional1: ExpresionRelacional?, operador: Token?, expresionRelacional2: ExpresionRelacional?):this(){
+        this.expresionRelacional1= expresionRelacional1
+        this.operador = operador
+        this.expresionRelacional2= expresionRelacional2
     }
+    constructor(expresionRelacional: ExpresionRelacional?): this(){
+        this.expresionRelacional1 = expresionRelacional
+    }
+
+
+    override fun getArbolVisual(): TreeItem<String> {
+        val raiz = TreeItem("Expresión Logica")
+        if( expresionRelacional1!=null && operador!=null && expresionRelacional2!=null ){
+            raiz.children.add( expresionRelacional1!!.getArbolVisual() )
+            raiz.children.add( TreeItem( "Operador: ${operador!!.lexema}" ) )
+            raiz.children.add( expresionRelacional2!!.getArbolVisual() )
+        }else{
+            raiz.children.add(expresionRelacional1!!.getArbolVisual())
+        }
+        return raiz
+    }
+
 }
