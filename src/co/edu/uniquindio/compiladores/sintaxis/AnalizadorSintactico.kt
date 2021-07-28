@@ -73,16 +73,12 @@ class AnalizadorSintactico(var listaTokens:ArrayList<Token>) {
                     var listaParametros = esListaParametros()
                     if (tokenActual.categoria == Categoria.PARENTESISDR) {
                         obtenerSiguienteToken()
-                        if (tokenActual.categoria == Categoria.LLAVE) {
                             var bloqueSentencia = esBloqueSentencias()
                             if (bloqueSentencia != null) {
                                 return Funcion(nombreFuncion, tipoRetorno, listaParametros, bloqueSentencia)
                             } else {
                                 reportarError(mensaje = "el bloque de sentencia esta vacio")
                             }
-                        } else {
-                            reportarError(mensaje = "el bloque de sentencia esta vacio")
-                        }
 
                     } else {
                         reportarError(mensaje = "el bloque de sentencia esta vacio")
@@ -124,7 +120,7 @@ class AnalizadorSintactico(var listaTokens:ArrayList<Token>) {
     fun esArreglo(): Arreglo? {
         if (tokenActual.categoria == Categoria.PALABRA_RESERVADA && tokenActual.lexema == "list") {
             obtenerSiguienteToken()
-            if (tokenActual.categoria == Categoria.IDENTIFICADOR) {
+            if (tokenActual.categoria == Categoria.VARIABLE) {
                 val nombre = tokenActual
                 obtenerSiguienteToken()
                 if (tokenActual.categoria == Categoria.DOS_PUNTOS) {
@@ -132,35 +128,30 @@ class AnalizadorSintactico(var listaTokens:ArrayList<Token>) {
                     val tipoDato = esTipoDato()
                     if (tipoDato != null) {
                         obtenerSiguienteToken()
-                        var listaExpresion = ArrayList<Expresion>()
-                        if (tokenActual.categoria == Categoria.OP_ASIGNACION && tokenActual.lexema == "=") {
+                        if (tokenActual.categoria == Categoria.OP_ASIGNACION) {
                             obtenerSiguienteToken()
-                            if (tokenActual.categoria == Categoria.LLAVE)
+                            if (tokenActual.categoria == Categoria.CORCHETEIZQ) {
                                 obtenerSiguienteToken()
-                            listaExpresion = esListaArgumentos()
-                            if (tokenActual.categoria == Categoria.LLAVE) {
-                                return Arreglo(nombre, tipoDato, listaExpresion)
-                                obtenerSiguienteToken()
+                                val listaExpresion = esListaArgumentos()
+                                if (tokenActual.categoria == Categoria.CORCHETEDR) {
+                                    obtenerSiguienteToken()
+                                    return Arreglo(nombre, tipoDato, listaExpresion)
+                                } else {
+                                    reportarError("falta corchete derecho del arreglo")
+                                }
                             } else {
-                                reportarError("falta corchete derecho del arrelo")
+                                reportarError("falta corchete izquierdo del arreglo")
                             }
                         } else {
-                            reportarError("falta corchete izquierdo del arreglo")
+                            reportarError("falta operador de asignacion")
                         }
-                    }
-                    if (tokenActual.categoria == Categoria.FIN_SENTENCIA) {
-                        obtenerSiguienteToken()
                     } else {
-                        reportarError("falta fin de sentencia")
+                        reportarError("falta tipo de dato en el arreglo")
                     }
                 } else {
-                    reportarError("falata tipo de dato en el arreglo")
+                    reportarError("falta dos puntos")
                 }
-            } else {
-                reportarError("falta tipo de dato en el arreglo")
             }
-        } else {
-            reportarError("falta definir el nombre del arreglo")
         }
         return null
     }
@@ -518,8 +509,6 @@ class AnalizadorSintactico(var listaTokens:ArrayList<Token>) {
             } else {
                 reportarError("no es una variable:")
             }
-        } else {
-            reportarError("no es tipo de dato valido:")
         }
         return null
     }
@@ -568,7 +557,7 @@ class AnalizadorSintactico(var listaTokens:ArrayList<Token>) {
     }
 
     /**
-     * <InvocacionFuncion> ::= identificador "("<ListaArgumentos>")" ";"
+     * <InvocacionFuncion> ::= identificador "("<ListaArgumentos>")"
      */
     fun esInvocacionFuncion(): InvocacionFuncion? {
         val posInicial: Int = posicionActual
@@ -580,12 +569,9 @@ class AnalizadorSintactico(var listaTokens:ArrayList<Token>) {
                 val argumentos = esListaArgumentos()
                 if (tokenActual.categoria == Categoria.PARENTESISDR) {
                     obtenerSiguienteToken()
-                    if (tokenActual.categoria == Categoria.FIN_SENTENCIA) {
-                        obtenerSiguienteToken()
-                        return InvocacionFuncion(nombreFuncion, argumentos)
-                    } else {
-                        reportarError("falta fin Sentencia")
-                    }
+
+                    return InvocacionFuncion(nombreFuncion, argumentos)
+
                 } else {
                     reportarError("falta parentesis derecho")
                 }
@@ -599,6 +585,7 @@ class AnalizadorSintactico(var listaTokens:ArrayList<Token>) {
         }
         return null
     }
+
 
     /**
      * <ValorNumerico> ::= [<signo>] decimal | [<signo>] entero | [<signo>] identificador

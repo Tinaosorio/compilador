@@ -17,4 +17,12 @@ class Variable(var nombreVariable: Token, var expresion:Expresion?) : Sentencia(
         return raiz
     }
 
+    override fun getJavaCode(): String{
+        return if(expresion!=null){
+            nombreVariable.getJavaCode()+"="+expresion!!.getJavaCode()
+        }else{
+            nombreVariable.getJavaCode()
+        }
+    }
+
 }

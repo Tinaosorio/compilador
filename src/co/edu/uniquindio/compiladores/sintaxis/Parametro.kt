@@ -18,4 +18,8 @@ class Parametro (var nombre:Token, var tipoDato:Token) {
         return raiz
     }
 
+    fun getJavaCode() :String{
+        return tipoDato.getJavaCode()+" "+nombre.getJavaCode()
+    }
+
 }

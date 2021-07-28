@@ -19,4 +19,12 @@ class ValorNumerico(var signo: Token?, var termino: Token){
         return raiz
     }
 
+    fun getJavaCode():String{
+        if(signo!=null){
+            return signo!!.getJavaCode()+" "+termino.getJavaCode()
+        }else{
+            return  termino.getJavaCode()
+        }
+    }
+
 }

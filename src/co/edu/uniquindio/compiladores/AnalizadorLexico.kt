@@ -51,7 +51,7 @@ class AnalizadorLexico (var codigoFuente:String) {
             if (esParentesisDr()) continue
             if (esParentesisIq()) continue
             if (esCorcheteDr()) continue
-            if (esCorcheteIq()) continue
+            if (esCorcheteIzq()) continue
             if (esPalabraReservadaVoid()) continue
             if (esOpRelacional()) continue
             if (esOpAsignacion()) continue
@@ -565,7 +565,7 @@ class AnalizadorLexico (var codigoFuente:String) {
             return true
         }
     }
-    fun esCorcheteIq(): Boolean {
+    fun esCorcheteIzq(): Boolean {
         val filaInicial = filaActual
         val columnaInicial = columnaActual
         val lexema = caracterActual.toString() + ""
@@ -574,7 +574,7 @@ class AnalizadorLexico (var codigoFuente:String) {
             return false
         } else {
             obtenerSiguienteCaracter()
-            almacenarToken(lexema, Categoria.CORCHETEIQ, filaInicial, columnaInicial)
+            almacenarToken(lexema, Categoria.CORCHETEIZQ, filaInicial, columnaInicial)
             return true
         }
     }
@@ -583,7 +583,7 @@ class AnalizadorLexico (var codigoFuente:String) {
         val columnaInicial = columnaActual
         val lexema = caracterActual.toString() + ""
 
-        if (caracterActual != '[' ) {
+        if (caracterActual != ']' ) {
             return false
         } else {
             obtenerSiguienteCaracter()
@@ -1485,10 +1485,10 @@ class AnalizadorLexico (var codigoFuente:String) {
         if (caracterActual.isDigit()) {
             return false
         }
-        if (caracterActual == '[') {
+        if (caracterActual == '_') {
             lexema += caracterActual
             obtenerSiguienteCaracter()
-            if (caracterActual == ']') {
+            if (caracterActual == '_') {
                 lexema += caracterActual
                 almacenarError(lexema, "No se completo la clase", filaInicial, columnaInicial)
                 obtenerSiguienteCaracter()
@@ -1500,7 +1500,7 @@ class AnalizadorLexico (var codigoFuente:String) {
                     i < MAX_LONG) {
                 lexema += caracterActual
                 obtenerSiguienteCaracter()
-                if (caracterActual == ']') {
+                if (caracterActual == '_') {
                     lexema += caracterActual
                     obtenerSiguienteCaracter()
                     almacenarToken(lexema,Categoria.CLASE, filaInicial, columnaInicial)

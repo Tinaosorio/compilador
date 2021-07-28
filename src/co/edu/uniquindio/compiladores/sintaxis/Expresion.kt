@@ -9,4 +9,12 @@ open class Expresion: Sentencia() {
         return TreeItem("Expresion ")
     }
 
+    override fun obtenerTipo(tablaSimbolos: TablaSimbolos, ambito:String):String{
+        return ""
+
+    }
+
+    override fun getJavaCode():String{
+        return ""
+    }
 }

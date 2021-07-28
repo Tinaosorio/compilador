@@ -49,4 +49,16 @@ class ExpresionAritmetica() : Expresion() {
         return "ExpresionAritmetica(expresionAritmetica1=$expresionAritmetica1, expresionAritmetica2=$expresionAritmetica2, operador=$operador, valorNumerico=$valorNumerico)"
     }
 
+    override fun getJavaCode(): String {
+        if( expresionAritmetica1!=null && operador!=null && expresionAritmetica2!=null){
+            return "("+expresionAritmetica1!!.getJavaCode()+")"+operador+ "" + expresionAritmetica2!!.getJavaCode()
+        }else if( expresionAritmetica1!=null && operador==null && expresionAritmetica2==null && valorNumerico==null ){
+            return "("+expresionAritmetica1!!.getJavaCode()+")"
+        }else if( valorNumerico!=null && operador!=null && expresionAritmetica2!=null){
+            return valorNumerico!!.getJavaCode() + operador!!.getJavaCode() + expresionAritmetica2!!.getJavaCode()
+        }else{
+            return  valorNumerico!!.getJavaCode()
+        }
+
+    }
 }

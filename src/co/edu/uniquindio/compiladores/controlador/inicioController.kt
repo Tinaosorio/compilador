@@ -3,14 +3,19 @@ package co.edu.uniquindio.compiladores.controlador
 import co.edu.uniquindio.compiladores.AnalizadorLexico
 import co.edu.uniquindio.compiladores.Error
 import co.edu.uniquindio.compiladores.Token
+import co.edu.uniquindio.compiladores.semantica.ErrorSemantico
+import co.edu.uniquindio.compiladores.sintaxis.AnalizadorSemantico
 import co.edu.uniquindio.compiladores.sintaxis.AnalizadorSintactico
 import co.edu.uniquindio.compiladores.sintaxis.ErrorSintactico
+import co.edu.uniquindio.compiladores.sintaxis.UnidadDeCompilacion
+import javafx.collections.FXCollections
 import javafx.concurrent.Task
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.*
 import javafx.scene.control.cell.PropertyValueFactory
-import kotlin.math.sin
+import java.io.File
+
 
 class inicioController {
     @FXML
@@ -33,7 +38,7 @@ class inicioController {
     @FXML lateinit var arbolVisual: TreeView<String>
 
 
-//tabla para los errores lexicos
+    //tabla para los errores lexicos
     @FXML
     var tablaError: TableView<Error>? = null
 
@@ -64,6 +69,22 @@ class inicioController {
     var ColumnaErrorSintactico: TableColumn<ErrorSintactico, Int>? = null
 
 
+    //tabla errores semanticos
+
+    @FXML
+    var tablaErroresSemanticos: TableView<ErrorSemantico>? = null
+
+    @FXML
+    var MensajeSemantico: TableColumn<ErrorSemantico, String>? = null
+
+    @FXML
+    var FilaErrorSemantico: TableColumn<ErrorSemantico, Int>? = null
+
+    @FXML
+    var ColumnaErrorSemantico: TableColumn<ErrorSemantico, Int>? = null
+
+    var uc: UnidadDeCompilacion? = null
+
 
     @FXML
     fun AnalizarCodigo(e : ActionEvent) {
@@ -80,9 +101,15 @@ class inicioController {
             if (lexico.listaErrores.isEmpty()) {
 
                 val sintaxis = AnalizadorSintactico(lexico.listaTokens)
-                val uc = sintaxis.esUnidadDeCompilacion()
+                uc = sintaxis.esUnidadDeCompilacion()
                 if (uc != null) {
-                    arbolVisual.root = uc.getArbolVisual()
+                    arbolVisual.root = uc!!.getArbolVisual()
+                    val semantica = AnalizadorSemantico()
+                    semantica.inicializar(uc!!)
+                    semantica.llenarTablaSimbolos()
+                    semantica.analizarSemantica()
+                    traducirCodigo()
+                    refreshTablaErrorSemantico(semantica.listaErrores)
                 }
                 refreshTablaErrorSintactico(sintaxis.listaErrores)
             } else {
@@ -105,18 +132,25 @@ class inicioController {
         fila?.cellValueFactory = PropertyValueFactory<Token, Int>("fila")
         columna?.cellValueFactory = PropertyValueFactory<Token, Int>("columna")
 
-        // tabla Errores
+        // tabla Errores lexicos
 
         LexemaError?.cellValueFactory = PropertyValueFactory<Error, String>("lexema")
         ErrorError?.cellValueFactory = PropertyValueFactory<Error, String>("errorMsg")
         FilaError?.cellValueFactory = PropertyValueFactory<Error, Int>("fila")
         ColumnaError?.cellValueFactory = PropertyValueFactory<Error, Int>("columna")
 
-        //tabla errores sintactivos
+        //tabla errores sintacticos
 
         Mensaje?.cellValueFactory = PropertyValueFactory<ErrorSintactico, String>("errorMsg")
         FilaErrorSintactico?.cellValueFactory = PropertyValueFactory<ErrorSintactico, Int>("fila")
         ColumnaErrorSintactico?.cellValueFactory = PropertyValueFactory<ErrorSintactico, Int>("columna")
+
+        //tabla errores semanticos
+
+        MensajeSemantico?.cellValueFactory = PropertyValueFactory<ErrorSemantico, String>("errorMsg")
+        FilaErrorSemantico?.cellValueFactory = PropertyValueFactory<ErrorSemantico, Int>("fila")
+        ColumnaErrorSemantico?.cellValueFactory = PropertyValueFactory<ErrorSemantico, Int>("columna")
+
     }
 
     fun refresh(listaTokens: List<Token>) {
@@ -163,4 +197,38 @@ class inicioController {
         Thread(task).start()
     }
 
+    fun refreshTablaErrorSemantico(listaErrorSemantico: List<ErrorSemantico>) {
+        val task = object : Task<List<ErrorSemantico>>() {
+            override fun call(): List<ErrorSemantico> {
+                return listaErrorSemantico
+            }
+
+            override fun succeeded() {
+                tablaErroresSemanticos?.items?.clear()
+                tablaErroresSemanticos?.items?.addAll( value )
+            }
+        }
+
+        Thread(task).start()
+    }
+
+
+    @FXML
+    fun traducirCodigo() {
+        if (uc != null) {
+            val codigo = uc!!.getJavaCode()
+            File("src/Principal.java").writeText(codigo)
+
+            val runtime = Runtime.getRuntime().exec("java src/Principal.java")
+            runtime.waitFor()
+            Runtime.getRuntime().exec("java Principal", null, File("src"))
+        } else {
+            val alerta = Alert(Alert.AlertType.ERROR)
+            alerta.headerText = null
+            alerta.contentText = "el codigo no se puede traducir porque tiene errores"
+            alerta.show()
+        }
+
+        println(uc!!.getJavaCode())
+    }
 }

@@ -29,7 +29,7 @@ enum class Categoria {
     COMA,
     PARENTESISIQ,
     PARENTESISDR,
-    CORCHETEIQ,
+    CORCHETEIZQ,
     CORCHETEDR,
     FIN_SENTENCIA
 }

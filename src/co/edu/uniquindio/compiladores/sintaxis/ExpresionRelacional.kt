@@ -34,4 +34,15 @@ class ExpresionRelacional() : Expresion() {
     override fun toString(): String {
         return "ExpresionRelacional(expresionAritmetica1=$expresionAritmetica1, expresionAritmetica2=$expresionAritmetica2, operador=$operador, valorVerdad=$valorVerdad)"
     }
+    override fun obtenerTipo(tablaSimbolos: TablaSimbolos, ambito:String): String {
+        return "bool"
+    }
+
+    override fun getJavaCode(): String {
+        if(expresionAritmetica1!=null && expresionAritmetica2!=null){
+            return expresionAritmetica1!!.getJavaCode()+operador!!.getJavaCode()+expresionAritmetica2!!.getJavaCode()
+        }else{
+            return valorVerdad!!.getJavaCode()
+        }
+    }
 }

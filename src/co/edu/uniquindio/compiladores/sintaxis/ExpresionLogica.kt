@@ -18,7 +18,6 @@ class ExpresionLogica() : Expresion() {
         this.expresionRelacional1 = expresionRelacional
     }
 
-
     override fun getArbolVisual(): TreeItem<String> {
         val raiz = TreeItem("Expresión Logica")
         if( expresionRelacional1!=null && operador!=null && expresionRelacional2!=null ){
@@ -31,4 +30,13 @@ class ExpresionLogica() : Expresion() {
         return raiz
     }
 
+    override fun getJavaCode(): String {
+        if(expresionRelacional1!=null && expresionRelacional2!=null){
+            return expresionRelacional1!!.getJavaCode()+operador!!.getJavaCode()+expresionRelacional2!!.getJavaCode()
+        }else if(operador!=null && expresionRelacional1!=null && expresionRelacional2==null){
+            return  operador!!.getJavaCode()+expresionRelacional1!!.getJavaCode()
+        }else{
+            return expresionRelacional1!!.getJavaCode()
+        }
+    }
 }
